@@ -1,0 +1,185 @@
+name: tweet_metrics
+tables:
+  - name: ENRICHED_TWEETS_DT
+    base_table:
+      database: ARENAFLOW
+      schema: AI_ML
+      table: ENRICHED_TWEETS_DT
+    dimensions:
+      - name: TWEET_ID
+        expr: TWEET_ID
+        data_type: VARCHAR(255)
+        sample_values:
+          - TWEET_8344f523-a8dc-4358-b1f6-dd1aaff8d43f
+          - TWEET_76382df2-9630-41aa-a275-06fff5c4f84f
+          - TWEET_ff666d34-ee39-4df7-9f84-82ab50b0528f
+        description: Unique identifier for each tweet in the enriched tweets dataset.
+        synonyms:
+          - tweet_identifier
+          - tweet_key
+          - unique_tweet_id
+          - tweet_reference
+          - message_id
+          - post_id
+      - name: SENTIMENT
+        expr: SENTIMENT
+        data_type: VARCHAR(4)
+        sample_values:
+          - good
+          - bad
+        description: The sentiment of the tweet, indicating whether the overall tone is positive (good) or negative (bad).
+        synonyms:
+          - opinion
+          - attitude
+          - emotion
+          - tone
+          - mood
+          - feeling
+          - outlook
+          - perspective
+          - viewpoint
+          - emotional_state
+      - name: SUMMARY
+        expr: SUMMARY
+        data_type: VARCHAR(16777216)
+        sample_values:
+          - 'The Sky Deck at the arena is filled with excitement as Silent Assassin Shaw makes a game-winning play. Fans enjoy Sweet Spot''s famous cinnamon funnel cakes during crunch time, enhancing their experience with prime views, no lines, and an enticing aroma. #ArenaFlow #GameDay // Business opportunities: Effective targeting of promotions towards fans during key game moments, addressing fan pain points by providing a seamless and enjoyable experience, potential partnership with Sweet Spot to improve arena operations and revenue.'
+          - At ArenaFlow, the scent of Popcorn Palace wafts through the air as veteran enforcer Reese Carter makes a dramatic play for the ball, exciting courtside VIPs and creating a Hollywood-like atmosphere. This engagement opportunity highlights the potential for increased sales and customer satisfaction through enhanced event experiences.
+          - Drew Wilson surprises the crowd with a long-range shot at a basketball game, enhancing fan engagement. The tweet also mentions the presence of Popcorn Palace, suggesting potential business opportunities for targeted promotions or improving the arena experience.
+        description: A column containing a summary of enriched tweets, providing insights into fan experiences and business opportunities at sports events, including potential partnerships, targeted promotions, and enhanced event experiences.
+        synonyms:
+          - abstract
+          - synopsis
+          - overview
+          - summary_output
+          - recap
+          - digest
+          - precis
+          - rundown
+      - name: TOPIC
+        expr: TOPIC
+        data_type: VARCHAR(16777216)
+        sample_values:
+          - Vendor Opportunity
+          - Player Highlight,Game Atmosphere,Vendor Opportunity
+          - Fan Engagement,Player Highlight,Vendor Operations
+        description: The TOPIC column represents the categorization of the content of a tweet, indicating the main theme or subject matter being discussed, such as vendor-related opportunities, player highlights, game atmosphere, fan engagement, or vendor operations.
+        synonyms:
+          - subject
+          - theme
+          - category
+          - classification
+          - label
+          - issue
+          - matter
+          - thread
+    facts:
+      - name: RETWEETS
+        expr: RETWEETS
+        data_type: NUMBER(38,0)
+        sample_values:
+          - '11410'
+          - '9907'
+          - '2789'
+        description: The number of times a tweet has been retweeted, indicating its popularity and reach.
+        synonyms:
+          - retweet_count
+          - forwarded_tweets
+          - shared_tweets
+          - retweeted_posts
+          - reposts
+          - forwarded_posts
+      - name: LIKES
+        expr: LIKES
+        data_type: NUMBER(38,0)
+        sample_values:
+          - '9939'
+          - '48859'
+          - '9277'
+        description: The total number of likes received by a tweet.
+        synonyms:
+          - likes_count
+          - favorites
+          - thumbs_up
+          - positive_reactions
+          - approvals
+          - likes_received
+      - name: REPLIES
+        expr: REPLIES
+        data_type: NUMBER(38,0)
+        sample_values:
+          - '2754'
+          - '1423'
+          - '113'
+        description: The number of replies to a tweet.
+        synonyms:
+          - responses
+          - comments
+          - feedback
+          - reactions
+          - answers
+      - name: QUOTES
+        expr: QUOTES
+        data_type: NUMBER(38,0)
+        sample_values:
+          - '1124'
+          - '227'
+          - '863'
+        description: The number of times a tweet has been quoted by other users.
+        synonyms:
+          - quoted_tweets
+          - quote_count
+          - citations
+          - referenced_tweets
+          - quoted_messages
+      - name: STREAM_LATENCY
+        expr: STREAM_LATENCY
+        data_type: NUMBER(18,0)
+        sample_values:
+          - '7'
+          - '3'
+          - '2'
+        description: The time it takes for a tweet to be processed and made available for analysis after it is posted, measured in seconds.
+        synonyms:
+          - processing_time
+          - latency_time
+          - delay
+          - processing_delay
+          - time_to_process
+          - data_latency
+          - latency_seconds
+      - name: GAME_MINUTE
+        expr: GAME_MINUTE
+        data_type: NUMBER(38,0)
+        sample_values:
+          - '59'
+          - '30'
+          - '51'
+        description: The minute of the game when the tweet was posted, with values representing the minute of the game clock (e.g. 59 for the 59th minute of the game).
+        synonyms:
+          - game_time
+          - minute_of_game
+          - game_elapsed_time
+          - minute_elapsed
+          - game_clock
+          - match_minute
+          - minute_played
+verified_queries:
+  - name: 'Average Tweet Stream Latency '
+    question: What is the average latency per minute?
+    use_as_onboarding_question: true
+    sql: SELECT game_minute, AVG(stream_latency) AS avg_stream_latency FROM enriched_tweets_dt GROUP BY game_minute ORDER BY game_minute ASC
+    verified_by: Tony Gordon Jr
+    verified_at: 1748144662
+  - name: Summary Check
+    question: What are fans tweeting about the game?
+    use_as_onboarding_question: false
+    sql: SELECT MIN(game_minute) AS earliest_minute, MAX(game_minute) AS latest_minute, summary FROM enriched_tweets_dt GROUP BY summary ORDER BY earliest_minute DESC NULLS LAST /* Generated by Cortex Analyst */
+    verified_by: Tony Gordon Jr
+    verified_at: 1748131055
+  - name: Topic Check
+    question: Which topic is gettin the most interactions from our fans tweets?
+    use_as_onboarding_question: false
+    sql: WITH topic_engagement AS (SELECT topic, SUM(likes + retweets + replies + quotes) AS total_engagement FROM enriched_tweets_dt GROUP BY topic) SELECT topic, total_engagement FROM topic_engagement ORDER BY total_engagement DESC NULLS LAST LIMIT 1 /* Generated by Cortex Analyst */
+    verified_by: Tony Gordon Jr
+    verified_at: 1748131220
