@@ -28,7 +28,7 @@ We'll highlight several Snowflake features to throughout this lab:
 1. Execute the SQL script found in [setup.sql](https://github.com/sfc-gh-mcostner/Unstructred-Batch-Data-Processing-with-Snowflake-Cortex/blob/main/setup.sql)
 2. Upload the [tweet_metrics.yaml](https://github.com/sfc-gh-mcostner/Unstructred-Batch-Data-Processing-with-Snowflake-Cortex/blob/main/tweet_metrics.yaml) file to an internal stage (`ARENAFLOW.AI_ML.SEMANTIC_MODELS` by default)
 3. Create a new Streamlit in Snowflake app with [cortex_analyst_chat_app_script.py](https://github.com/sfc-gh-mcostner/Unstructred-Batch-Data-Processing-with-Snowflake-Cortex/blob/main/cortex_analyst_chat_app_script.py) as the main app file
-4. Upload [ArenaFlow Snowflake Cortex Hands on Lab.ipynb](<https://github.com/sfc-gh-mcostner/Unstructred-Batch-Data-Processing-with-Snowflake-Cortex/blob/main/ArenaFlow Snowflake Cortex Hands on Lab.ipynb>) to Snowsight
+4. In Snowsight, navigate to **Projects** > **Notebooks** and upload [ArenaFlow Snowflake Cortex Hands on Lab.ipynb](<https://github.com/sfc-gh-mcostner/Unstructred-Batch-Data-Processing-with-Snowflake-Cortex/blob/main/ArenaFlow Snowflake Cortex Hands on Lab.ipynb>)
 - Choose "Run on Container" as the **Python Environment**
 - Select "Snowflake ML Runtime GPU 1.0" as the **Runtime**
 - Select "GPU_ARENAFLOW_M" as the **Compute Pool**
