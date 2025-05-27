@@ -32,5 +32,6 @@ We'll highlight several Snowflake features to throughout this lab:
 - Choose "Run on Container" as the **Python Environment**
 - Select "Snowflake ML Runtime GPU 1.0" as the **Runtime**
 - Select "GPU_ARENAFLOW_M" as the **Compute Pool**
-
+#### Note
+Setup will require both `SYSADMIN` and `ACCOUNTADMIN` to create various objects and integrations
 
