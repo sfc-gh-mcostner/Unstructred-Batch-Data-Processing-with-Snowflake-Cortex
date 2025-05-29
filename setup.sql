@@ -17,6 +17,8 @@ CREATE WAREHOUSE IF NOT EXISTS WH_ARENAFLOW_HOLS
 
     
 -- CREATE COMPUTE POOLS
+-- Note: you may need to change the instance family of your compute pool based on your Snowflake account region
+-- Availability of different engines can be found here: https://docs.snowflake.com/en/sql-reference/sql/create-compute-pool
 CREATE COMPUTE POOL IF NOT EXISTS gpu_arenaflow_m
   MIN_NODES = 1
   MAX_NODES = 1
@@ -33,7 +35,7 @@ CREATE OR REPLACE NETWORK RULE ARENAFLOW.AI_ML.PYPI_NETWORK_RULE
 
     
 CREATE ROLE IF NOT EXISTS ARENAFLOW_ADMIN;
-GRANT ROLE ARENAFLOW_ADMIN TO USER mcostner;
+GRANT ROLE ARENAFLOW_ADMIN TO USER <your username>;
 GRANT CREATE INTEGRATION ON ACCOUNT TO ROLE ARENAFLOW_ADMIN;
 
 
@@ -77,20 +79,3 @@ CREATE CONTACT IF NOT EXISTS ARENAFLOW_ADMINS
 -- TASK GRANT FOR CONTINUOUS PIPELINE
 ------------------------------------------------
 GRANT EXECUTE TASK ON ACCOUNT TO ROLE ARENAFLOW_ADMIN;
-
-
-------------------------------------------------
--- ADD CONTACTS TO
-------------------------------------------------
-ALTER DATABASE ARENAFLOW SET CONTACT STEWARD = ARENAFLOW_ADMINS;
-ALTER DATABASE ARENAFLOW SET CONTACT SUPPORT = ARENAFLOW_ADMINS;
-ALTER DATABASE ARENAFLOW SET CONTACT ACCESS_APPROVAL = ARENAFLOW_ADMINS;
-
-------------------------------------------------
--- ADD TAGS TO
-------------------------------------------------
-
--- DATABASE
-ALTER DATABASE ARENAFLOW SET TAG ARENAFLOW_TAG = 'ARENAFLOW_AI';
-ALTER WAREHOUSE WH_ARENAFLOW_HOLS SET TAG ARENAFLOW_TAG = 'ARENAFLOW_AI';
-ALTER COMPUTE POOL CP_ARENAFLOW_HOLS SET TAG ARENAFLOW_TAG = 'ARENAFLOW_AI';
